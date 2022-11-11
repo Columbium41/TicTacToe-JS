@@ -37,7 +37,7 @@ for (var i = 0; i < menuButtons.length; i++) { // Menu Buttons
         startGame(e.target.innerText);
     });
 }
-returnButton.addEventListener("click", e => {
+returnButton.addEventListener("click", e => { // Exit Button
     exitGame();
 });
 
@@ -77,7 +77,6 @@ function startGame(difficulty) {
     menu.style.display = "none";
     game.style.display = "block";
 
-    // If it's the CPU's turn, let them make a move
     if (!playerTurn) {
         CPUmove();
     }
@@ -107,32 +106,74 @@ function placeTile(location) {
         grid[r][c] = playerTile;
         tile.children[0].textContent = playerTile;
         info.children[1].textContent = `${((playerTurn) ? ("Player") : ("CPU"))} Turn`;
-        gameStatus();
+        checkGameStatus();
+
+        // If the game is not over, let CPU move
+        if (inGame) {
+            CPUmove();
+        }
     }
 }
 
 
 function CPUmove() {
-    if (CPU_mode === "Easy") {
+    move = [Math.floor(Math.random() * 3), Math.floor(Math.random() * 3)];
+    if (CPU_mode === "Easy") {  // Pick the worst possible moves with minimax
 
     }
-    else if (CPU_mode === "Normal") {
+    else if (CPU_mode === "Normal") {  // Pick random moves
+        while (grid[move[0]][move[1]] !== "") {
+            move[0] = Math.floor(Math.random() * 3);
+            move[1] = Math.floor(Math.random() * 3);
+        }
+    }
+    else if (CPU_mode === "Hard") {  // Look for winning moves and block opponnent's 3 in a rows
 
     }
-    else if (CPU_mode === "Hard") {
-
+    else if (CPU_mode === "Impossible") {  // Use minimax
+        move = minimaxHelper();
     }
-    else if (CPU_mode === "Impossible") {
 
-    }
+    playerTurn = true;
+    tile = document.getElementById(`${move[0]},${move[1]}`)
+
+    grid[move[0]][move[1]] = CPU_Tile;
+    tile.children[0].textContent = CPU_Tile;
+    info.children[1].textContent = `${((playerTurn) ? ("Player") : ("CPU"))} Turn`;
+    checkGameStatus();
+}
+
+
+function checkGameStatus() {
     
-   //playerTurn = true;
+    currentStatus = gameStatus();
+    console.log(currentStatus)
+    if (currentStatus !== "") {
+        inGame = false;
+
+        if (currentStatus === playerTile) {
+            p_scores[CPU_mode]++; 
+            alert(`Player won the game! The score is ${p_scores[CPU_mode]} - ${cpu_scores[CPU_mode]}`);
+        }
+        else if (currentStatus === CPU_Tile) {
+            cpu_scores[CPU_mode]++;
+            alert(`CPU won the game! The score is ${p_scores[CPU_mode]} - ${cpu_scores[CPU_mode]}`);
+        }
+        else {
+            alert(`Game is tied! The score is ${p_scores[CPU_mode]} - ${cpu_scores[CPU_mode]}`);
+        }
+        gameOverOverlay.style.display = "block";
+    }
+
 }
 
 
 function gameStatus() {
     // Check if either the player or CPU won
-    ["X", "O"].forEach((symbol) => {
+    symbols = [playerTile, CPU_Tile];
+    for (var i = 0; i < symbols.length; i++) {
+        symbol = symbols[i];
+
         horizontal = ((grid[0][0] === symbol && grid[0][1] === symbol && grid[0][2] === symbol) ||
                      (grid[1][0] === symbol && grid[1][1] === symbol && grid[1][2] === symbol) ||
                      (grid[2][0] === symbol && grid[2][1] === symbol && grid[2][2] === symbol));
@@ -146,34 +187,21 @@ function gameStatus() {
 
         // Either player or CPU won
         if (horizontal || vertical || diagonal) {
-            inGame = false;
-            gameOverOverlay.style.display = "block";
-            // Alert the winner and increment scores
-            if (playerTile === symbol) {
-                p_scores[CPU_mode]++; 
-                alert(`Player won the game! The score is ${p_scores[CPU_mode]} - ${cpu_scores[CPU_mode]}`);
-            }
-            else {
-                cpu_scores[CPU_mode]++;
-                alert(`CPU won the game! The score is ${p_scores[CPU_mode]} - ${cpu_scores[CPU_mode]}`);
-            }
-            return;
+            return symbol;
         }
-    });
+    }
 
     // Check if there are still tiles left
     for (var i = 0; i < grid.length; i++) {
         for (var j = 0; j < grid[i].length; j++) {
             if (grid[i][j] === "") {
-                return;
+                return "";
             }
         }
     }
 
     // Game is tied
-    inGame = false;
-    gameOverOverlay.style.display = "block";
-    alert(`Game is tied! The score is ${p_scores[CPU_mode]} - ${cpu_scores[CPU_mode]}`);
+    return "tied";
 
 }
 
@@ -197,6 +225,25 @@ function resetVariables() {
 
 
 function minimaxHelper() {
+    bestTile = 0;
+    bestCalc = Number.MAX_SAFE_INTEGER;
+
+    // Check every available move
+    for (var i = 0; i < grid.length; i++) {
+        for (var j = 0; j < grid[i].length; j++) {
+            if (grid[i][j] === "") {
+                
+            }
+        }
+    }
+
+    // Return the move with the best calculation
+    row = Math.floor(bestTile / 3);
+    col = bestTile % 3;
+    return [row, col];
+}
+
+function minimax() {
 
 }
 
