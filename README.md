@@ -1,7 +1,7 @@
-# Javascript Web App (WIP)
+# Javascript Web App
 
 ## About
-A website that lets you play TicTacToe against a CPU
+A website that lets you play TicTacToe against a CPU opponent
 
-## What I learned so far
-- Basics of Javascript DOM
+## Website Link
+[https://columbium41.github.io/TicTacToe-JS/](https://columbium41.github.io/TicTacToe-JS/)
