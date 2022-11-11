@@ -9,23 +9,48 @@
 
     <title>TicTacToe</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="png" href="icon.png">
     <script src="script.js" defer></script>
 </head>
 
 <body>
     
-    <div class="container">
-        <div class="menu">
-            <h1>TicTacToe</h1>
-            <h4>Select a difficulty</h4>
-            <button type="button" class="difficulty-button">Easy</button>
-            <button type="button" class="difficulty-button">Normal</button>
-            <button type="button" class="difficulty-button">Hard</button>
-            <button type="button" class="difficulty-button">Impossible</button>
+    <!-- Menu Interface -->
+    <div id="menu">
+        <h1>TicTacToe</h1>
+        <h4>Select a difficulty</h4>
+        <button type="button" class="difficulty-button">Easy</button>
+        <button type="button" class="difficulty-button">Normal</button>
+        <button type="button" class="difficulty-button">Hard</button>
+        <button type="button" class="difficulty-button">Impossible</button>
+    </div>
+
+    <!-- Game Container -->
+    <div id="game">
+        <!-- Game Information -->
+        <div id="info">
+            <p>Score</p>
+            <p id="score">x - y</p>
+            <p id="status"></p>
         </div>
-        <div class="game">
-            
-        </div>
+        <!-- Game Interface -->
+        <table>
+            <tr>
+                <td><p></p></td>
+                <td><p></p></td>
+                <td><p></p></td>
+            </tr>
+            <tr>
+                <td><p></p></td>
+                <td><p></p></td>
+                <td><p></p></td>
+            </tr>
+            <tr>
+                <td><p></p></td>
+                <td><p></p></td>
+                <td><p></p></td>
+            </tr>
+        </table>
     </div>
 
 </body>
