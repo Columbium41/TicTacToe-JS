@@ -128,7 +128,7 @@ function CPUmove() {
         }
     }
     else if (CPU_mode === "Hard") {  // Look for winning moves and block opponnent's 3 in a rows
-
+        move = hardCPUMove();
     }
     else if (CPU_mode === "Impossible") {  // Use minimax
         move = minimaxHelper();
@@ -145,9 +145,7 @@ function CPUmove() {
 
 
 function checkGameStatus() {
-    
     currentStatus = gameStatus();
-    console.log(currentStatus)
     if (currentStatus !== "") {
         inGame = false;
 
@@ -221,6 +219,45 @@ function resetVariables() {
     }
 
     gameOverOverlay.style.display = "none";
+}
+
+
+function hardCPUMove() {
+    // Check for any winning moves
+    for (var i = 0; i < grid.length; i++) {
+        for (var j = 0; j < grid[i].length; j++) {
+            if (grid[i][j] === "") {
+                grid[i][j] = CPU_Tile;
+                if (gameStatus() === CPU_Tile) {
+                    grid[i][j] = "";
+                    return [i, j];
+                }
+                grid[i][j] = "";
+            }
+        }
+    }
+
+    // Check for any losing moves
+    for (var i = 0; i < grid.length; i++) {
+        for (var j = 0; j < grid[i].length; j++) {
+            if (grid[i][j] === "") {
+                grid[i][j] = playerTile;
+                if (gameStatus() === playerTile) {
+                    grid[i][j] = "";
+                    return [i, j];
+                }
+                grid[i][j] = "";
+            }
+        }
+    }
+
+    // Pick a random move
+    move = [Math.floor(Math.random() * 3), Math.floor(Math.random() * 3)];
+    while (grid[move[0]][move[1]] !== "") {
+        move[0] = Math.floor(Math.random() * 3);
+        move[1] = Math.floor(Math.random() * 3);
+    }
+    return move;
 }
 
 
