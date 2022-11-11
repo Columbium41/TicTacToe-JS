@@ -119,7 +119,7 @@ function placeTile(location) {
 function CPUmove() {
     move = [Math.floor(Math.random() * 3), Math.floor(Math.random() * 3)];
     if (CPU_mode === "Easy") {  // Pick the worst possible moves with minimax
-
+        move = EasyCPUMove();
     }
     else if (CPU_mode === "Normal") {  // Pick random moves
         while (grid[move[0]][move[1]] !== "") {
@@ -131,7 +131,7 @@ function CPUmove() {
         move = hardCPUMove();
     }
     else if (CPU_mode === "Impossible") {  // Use minimax
-        move = minimaxHelper();
+        move = minimaxHelper(!playerTurn);
     }
 
     playerTurn = true;
@@ -261,26 +261,105 @@ function hardCPUMove() {
 }
 
 
-function minimaxHelper() {
+function minimaxHelper(isMaximizing) {
     bestTile = 0;
-    bestCalc = Number.MAX_SAFE_INTEGER;
+    bestCalc = Number.MIN_SAFE_INTEGER;
 
     // Check every available move
     for (var i = 0; i < grid.length; i++) {
         for (var j = 0; j < grid[i].length; j++) {
             if (grid[i][j] === "") {
-                
+                grid[i][j] = CPU_Tile;
+
+                currentCalc = minimax(!isMaximizing, 1);
+                if (currentCalc > bestCalc) {
+                    bestCalc = currentCalc;
+                    bestTile = [i, j];
+                }
+ 
+                grid[i][j] = "";
             }
         }
     }
 
     // Return the move with the best calculation
-    row = Math.floor(bestTile / 3);
-    col = bestTile % 3;
-    return [row, col];
+    return bestTile;
 }
 
-function minimax() {
 
+function minimax(isMaximizing, depth) {
+    // Check if game is tied
+    currentStatus = gameStatus();
+    if (currentStatus === "tied") {
+        return 0;
+    }
+
+    if (!isMaximizing) {  // Player's Turn
+        // Check if the CPU made a winning move
+        if (currentStatus === CPU_Tile) {
+            return (10 - depth);  // Return a positive value (good move for CPU)
+        }
+
+        // Find the best move the player can make
+        localBestCalc = Number.MAX_SAFE_INTEGER;
+        for (var i = 0; i < grid.length; i++) {
+            for (var j = 0; j < grid[i].length; j++) {
+                if (grid[i][j] === "") {
+                    grid[i][j] = playerTile;
+                    localBestCalc = Math.min(localBestCalc, minimax(!isMaximizing, depth + 1));
+                    grid[i][j] = "";
+                }
+            }
+        }
+
+        return localBestCalc;
+    }
+
+    else {  // CPU's turn
+        // Check if the player made a winning move
+        if (currentStatus === playerTile) {
+            return -10 + depth;  // Return a negative value (bad move for CPU)
+        }
+
+        // Find the best move the CPU can make
+        localBestCalc = Number.MIN_SAFE_INTEGER;
+        for (var i = 0; i < grid.length; i++) {
+            for (var j = 0; j < grid[i].length; j++) {
+                if (grid[i][j] === "") {
+                    grid[i][j] = CPU_Tile;
+                    localBestCalc = Math.max(localBestCalc, minimax(!isMaximizing, depth + 1));
+                    grid[i][j] = "";
+                }
+            }
+        }
+
+        return localBestCalc;
+    }
+}
+
+
+function EasyCPUMove() {
+    worstTile = 0;
+    worstCalc = Number.MAX_SAFE_INTEGER;
+
+    // Check every available move
+    for (var i = 0; i < grid.length; i++) {
+        for (var j = 0; j < grid[i].length; j++) {
+            if (grid[i][j] === "") {
+                grid[i][j] = CPU_Tile;
+
+                currentCalc = minimax(false, 1);
+                if (currentCalc < worstCalc) {
+                    worstCalc = currentCalc;
+                    worstTile = [i, j];
+                }
+ 
+                grid[i][j] = "";
+            }
+        }
+    }
+
+    // Return the move with the best calculation
+    return worstTile;
 }
 
