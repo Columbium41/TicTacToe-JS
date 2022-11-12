@@ -93,6 +93,11 @@ function exitGame() {
 
 
 function placeTile(location) {
+    // Return nothing if location is invalid
+    if (location === "") {
+        return;
+    }
+
     // Get the location of the tile the user wants to place
     split = location.split(",");
     r = split[0];
