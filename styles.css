@@ -21,6 +21,14 @@ body {
     background: #232323;
 }
 
+.no-select {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-touch-callout: none;
+}
+
 /* MENU INTERFACE STYLING */
 #menu {
     background: #f0f0f0;
@@ -59,7 +67,6 @@ h4 {
     font-size: 1.25rem;
     padding: 7px 15px;
     margin: 0 5px;
-    user-select: none;
     border: 2px solid black;
     border-radius: 5px;
     transition: background 0.25s;
@@ -105,7 +112,6 @@ td {
 }
 td > p {
     font-size: 4rem;
-    user-select: none;
     position: absolute;
     top: 50%;
     left: 50%;
